@@ -1,0 +1,2 @@
+package ad.kata.gameoflife
+
