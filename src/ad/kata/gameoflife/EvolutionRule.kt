@@ -4,6 +4,12 @@ interface EvolutionRule {
     fun apply(cell: Cell, liveNeighbors: NumberOfLiveNeighbors): Cell
 }
 
+fun EvolutionRule.liveCellSurvivesWith(liveNeighbors: NumberOfLiveNeighbors) =
+    apply(LiveCell, liveNeighbors) is LiveCell
+
+fun EvolutionRule.deadCellIsRebornWith(liveNeighbors: NumberOfLiveNeighbors) =
+    apply(DeadCell, liveNeighbors) is LiveCell
+
 @JvmInline
 value class NumberOfLiveNeighbors(val amount: Int) {
     init {

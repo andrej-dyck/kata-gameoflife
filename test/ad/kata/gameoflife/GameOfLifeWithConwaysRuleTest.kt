@@ -1,7 +1,7 @@
 package ad.kata.gameoflife
 
+import ad.kata.gameoflife.InfiniteBoardTest.Companion.boardFromString
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -9,9 +9,6 @@ class GameOfLifeWithConwaysRuleTest {
 
     private fun simulateWith(seed: Board) =
         GameOfLife.simulateWith(ConwaysOriginalRule, seed)
-
-    @SuppressWarnings("UnusedPrivateMember")
-    fun boardFromString(vararg cellRows: String): Board = Infinite2DBoard()
 
     @Nested
     inner class StillLife {
@@ -82,7 +79,6 @@ class GameOfLifeWithConwaysRuleTest {
     inner class StablePatterns {
 
         @Test
-        @Disabled("not yet implemented")
         fun `small rotated-L pattern must result in stable square in 1 iteration`() {
             val givenBoard = boardFromString(
                 ".##.",
@@ -101,7 +97,6 @@ class GameOfLifeWithConwaysRuleTest {
         }
 
         @Test
-        @Disabled("not yet implemented")
         fun `large rotated-L pattern must result in stable circle in 3 iterations`() {
             val givenBoard = boardFromString(
                 ".....",
@@ -136,7 +131,6 @@ class GameOfLifeWithConwaysRuleTest {
         }
 
         @Test
-        @Disabled("not yet implemented")
         fun `large I pattern must result in stable oval in 3 iterations`() {
             val givenBoard = boardFromString(
                 "...#...",
@@ -171,7 +165,6 @@ class GameOfLifeWithConwaysRuleTest {
         private val allCellsAreDeadBoard = boardFromString()
 
         @Test
-        @Disabled("not yet implemented")
         fun `i pattern must result in all dead in 2 iterations`() =
             `assertThat this is the simulated sequence of boards`(
                 boardFromString(
@@ -188,7 +181,6 @@ class GameOfLifeWithConwaysRuleTest {
             )
 
         @Test
-        @Disabled("not yet implemented")
         fun `diagonal line pattern must result in all dead in 2 iterations`() =
             `assertThat this is the simulated sequence of boards`(
                 boardFromString(
@@ -205,7 +197,6 @@ class GameOfLifeWithConwaysRuleTest {
             )
 
         @Test
-        @Disabled("not yet implemented")
         fun `rotated-i pattern must result in all dead in 5 iterations`() =
             `assertThat this is the simulated sequence of boards`(
                 boardFromString(
@@ -246,7 +237,6 @@ class GameOfLifeWithConwaysRuleTest {
     inner class OscillatingPatterns {
 
         @Test
-        @Disabled("not yet implemented")
         fun `blinker pattern is a period 2 oscillator`() {
             val seed = boardFromString(
                 "..#..",
@@ -266,7 +256,6 @@ class GameOfLifeWithConwaysRuleTest {
         }
 
         @Test
-        @Disabled("not yet implemented")
         fun `clock pattern is a period 2 oscillator`() {
             val seed = boardFromString(
                 "...#..",
@@ -288,7 +277,6 @@ class GameOfLifeWithConwaysRuleTest {
         }
 
         @Test
-        @Disabled("not yet implemented")
         fun `pulsar pattern is a period 3 oscillator`() {
             val seed = boardFromString(
                 ".................",
@@ -358,7 +346,6 @@ class GameOfLifeWithConwaysRuleTest {
         }
 
         @Test
-        @Disabled("not yet implemented")
         fun `glider is a moving period 4 oscillator`() {
             val seed = boardFromString(
                 "..#....",
