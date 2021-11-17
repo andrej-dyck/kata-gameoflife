@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.0"
     id("io.gitlab.arturbosch.detekt").version("1.18.1")
 }
 
@@ -45,6 +45,6 @@ tasks.test {
 
 /* Gradle wrapper */
 tasks.withType<Wrapper> {
-    gradleVersion = "7.0"
+    gradleVersion = "7.3"
     distributionType = Wrapper.DistributionType.BIN
 }
