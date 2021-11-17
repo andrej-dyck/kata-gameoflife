@@ -1,14 +1,14 @@
 package ad.kata.gameoflife
 
 interface EvolutionRule {
-    fun apply(cell: Cell, liveNeighbors: NumberOfLiveNeighbors): Cell
+    fun applyTo(cell: Cell, liveNeighbors: NumberOfLiveNeighbors): Cell
 }
 
 fun EvolutionRule.liveCellSurvivesWith(liveNeighbors: NumberOfLiveNeighbors) =
-    apply(LiveCell, liveNeighbors) is LiveCell
+    applyTo(LiveCell, liveNeighbors) is LiveCell
 
 fun EvolutionRule.deadCellIsRebornWith(liveNeighbors: NumberOfLiveNeighbors) =
-    apply(DeadCell, liveNeighbors) is LiveCell
+    applyTo(DeadCell, liveNeighbors) is LiveCell
 
 @JvmInline
 value class NumberOfLiveNeighbors(val amount: Int) {
@@ -28,7 +28,7 @@ class ClassicRule(
     private val birthPredicate: (NumberOfLiveNeighbors) -> Boolean
 ) : EvolutionRule {
 
-    override fun apply(cell: Cell, liveNeighbors: NumberOfLiveNeighbors) = when {
+    override fun applyTo(cell: Cell, liveNeighbors: NumberOfLiveNeighbors) = when {
         cell.diesWith(liveNeighbors) -> DeadCell
         cell.isBornWith(liveNeighbors) -> LiveCell
         else -> cell

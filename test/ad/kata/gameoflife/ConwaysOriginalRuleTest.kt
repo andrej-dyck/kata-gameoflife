@@ -15,7 +15,7 @@ class ConwaysOriginalRuleTest {
         liveNeighbors: Int
     ) =
         `assertThat it dies`(
-            conwaysRule.apply(LiveCell, NumberOfLiveNeighbors(liveNeighbors))
+            conwaysRule.applyTo(LiveCell, NumberOfLiveNeighbors(liveNeighbors))
         )
 
     @ParameterizedTest
@@ -24,7 +24,7 @@ class ConwaysOriginalRuleTest {
         liveNeighbors: Int
     ) =
         `assertThat it lives`(
-            conwaysRule.apply(LiveCell, NumberOfLiveNeighbors(liveNeighbors))
+            conwaysRule.applyTo(LiveCell, NumberOfLiveNeighbors(liveNeighbors))
         )
 
     @ParameterizedTest
@@ -33,13 +33,13 @@ class ConwaysOriginalRuleTest {
         liveNeighbors: Int
     ) =
         `assertThat it dies`(
-            conwaysRule.apply(LiveCell, NumberOfLiveNeighbors(liveNeighbors))
+            conwaysRule.applyTo(LiveCell, NumberOfLiveNeighbors(liveNeighbors))
         )
 
     @Test
     fun `any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction`() =
         `assertThat it lives`(
-            conwaysRule.apply(DeadCell, NumberOfLiveNeighbors(3))
+            conwaysRule.applyTo(DeadCell, NumberOfLiveNeighbors(3))
         )
 
     private fun `assertThat it dies`(cell: Cell) {
