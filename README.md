@@ -7,12 +7,12 @@
 ./gradlew build
 ```
 
-**Detekt**
+**Only Detekt**
 ```
 ./gradlew detekt
 ```
 
-**Test**
+**Only Tests**
 ```
-./gradlew check
+./gradlew test
 ```

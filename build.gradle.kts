@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.6.0"
-    id("io.gitlab.arturbosch.detekt").version("1.18.1")
+    id("io.gitlab.arturbosch.detekt").version("1.19.0")
 }
 
 group = "ad.kata"
@@ -9,8 +9,6 @@ version = "1.0"
 repositories {
     mavenLocal()
     mavenCentral()
-    // Detekt needs kotlinx-html for its report
-    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
 }
 
 dependencies {
