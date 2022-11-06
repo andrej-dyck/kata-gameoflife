@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.6.0"
-    id("io.gitlab.arturbosch.detekt").version("1.19.0")
+    kotlin("jvm") version "1.7.20"
+    id("io.gitlab.arturbosch.detekt") version "1.21.0"
 }
 
 group = "ad.kata"
@@ -13,36 +13,31 @@ repositories {
 
 dependencies {
     // JUnit 5
-    testImplementation(platform("org.junit:junit-bom:5.8.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation(platform("org.junit:junit-bom:5.9.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.21.0")
+    testImplementation("org.assertj:assertj-core:3.23.1")
 }
 
-/* Source sets by Kotlin conventions /src and /test */
-val sources = setOf("main" to "src/", "test" to "test/")
-kotlin {
-    sources.forEach { (set, dir) ->
-        sourceSets[set].apply { kotlin.srcDirs(dir) }
-    }
-}
+sourceSets.main { kotlin.srcDirs("src/") }
+sourceSets.test { kotlin.srcDirs("test/") }
 
 /* Detekt */
 detekt {
-    source = files(sources.map { it.second })
+    source = files("src/", "test/")
     config = files("detekt.yml")
 }
 
 /* Check with JUnit 5 and jqwik */
 tasks.test {
     useJUnitPlatform {
-        includeEngines("junit-jupiter", "jqwik")
+        includeEngines("junit-jupiter")
         excludeEngines("junit-vintage")
     }
 }
 
 /* Gradle wrapper */
 tasks.withType<Wrapper> {
-    gradleVersion = "7.3"
+    gradleVersion = "7.5.1"
     distributionType = Wrapper.DistributionType.BIN
 }
