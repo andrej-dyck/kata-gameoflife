@@ -26,14 +26,15 @@ data class Infinite2DBoard(
         }.toHashSet()
 
     private fun adjacentDeadCells() =
-        livingCells.flatMap(::neighborsOf).toHashSet() - livingCells
+        livingCells.flatMap(neighborsOf).toHashSet() - livingCells
 
     private fun liveNeighborsOf(coordinate: Coordinate) = LiveNeighbors(
         neighborsOf(coordinate).count(livingCells::contains)
     )
 
-    fun neighborsOf(coordinate: Coordinate) =
-        adjacentCells.map(coordinate::shift)
+    val neighborsOf = memoize { c: Coordinate ->
+        adjacentCells.map(c::shift)
+    }
 
     companion object {
         private val adjacentCells by lazy {
@@ -52,3 +53,9 @@ private fun LiveCell.survives(rule: EvolutionRule, neighbors: LiveNeighbors) =
 private fun DeadCell.isBorn(rule: EvolutionRule, neighbors: LiveNeighbors) =
     rule.appliedTo(this, neighbors).isAlive()
 
+inline fun <T, R> memoize(crossinline f: (T) -> R): (T) -> R {
+    val values = mutableMapOf<T, R>()
+    return {
+        values.getOrPut(it) { f(it) }
+    }
+}
