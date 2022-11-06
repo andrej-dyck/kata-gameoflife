@@ -27,8 +27,8 @@ class InfiniteBoardTest {
         @Test
         fun `equality is defined by living cell coordinates`() {
             val board = Infinite2DBoard(
-                0 to 0,
-                1 to 1
+                Coordinate(0, 0),
+                Coordinate(1, 1)
             )
 
             assertAll({
@@ -57,7 +57,7 @@ class InfiniteBoardTest {
         @Test
         fun `board does not evolve when all cells survive and none are reborn`() {
             val board = Infinite2DBoard(
-                1 to 1
+                Coordinate(1, 1)
             )
             assertThat(
                 board.evolve(
@@ -71,7 +71,7 @@ class InfiniteBoardTest {
         @Test
         fun `board dies when no cells survive and none are reborn`() {
             val board = Infinite2DBoard(
-                1 to 1
+                Coordinate(1, 1)
             )
             assertThat(
                 board.evolve(
@@ -85,7 +85,7 @@ class InfiniteBoardTest {
         @Test
         fun `board populates by dead neighbors next to a living cell are being reborn`() {
             val board = Infinite2DBoard(
-                1 to 1
+                Coordinate(1, 1)
             )
             assertThat(
                 board.evolve(
@@ -102,21 +102,21 @@ class InfiniteBoardTest {
     }
 
     @Nested
-    inner class Coordinates {
+    inner class Neighbors {
 
         @Test
         fun `adjacent coordinates are the eight neighbors of a coordinate`() {
             assertThat(
-                (1 to 1).adjacent()
+                Infinite2DBoard().neighborsOf(Coordinate(1, 1))
             ).containsExactlyInAnyOrder(
-                0 to 0,
-                0 to 1,
-                0 to 2,
-                1 to 0,
-                1 to 2,
-                2 to 0,
-                2 to 1,
-                2 to 2
+                Coordinate(0, 0),
+                Coordinate(0, 1),
+                Coordinate(0, 2),
+                Coordinate(1, 0),
+                Coordinate(1, 2),
+                Coordinate(2, 0),
+                Coordinate(2, 1),
+                Coordinate(2, 2)
             )
         }
     }
@@ -126,7 +126,7 @@ class InfiniteBoardTest {
             cellRows.flatMapIndexed { rowIndex, row ->
                 row.withIndex()
                     .filterNot { it.value in setOf(' ', '.') }
-                    .map { rowIndex to it.index }
+                    .map { col -> Coordinate(rowIndex, col.index) }
             }
         )
     }

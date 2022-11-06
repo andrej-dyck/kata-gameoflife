@@ -4,6 +4,10 @@ interface Board {
     fun evolve(rule: EvolutionRule): Board
 }
 
+data class Coordinate(val x: Int, val y: Int) {
+    operator fun plus(xy: Pair<Int, Int>) = Coordinate(x + xy.first, y + xy.second)
+}
+
 data class Infinite2DBoard(
     private val livingCells: HashSet<Coordinate>
 ) : Board {
@@ -22,23 +26,16 @@ data class Infinite2DBoard(
         deadCellsNeighborsToLiving().filter { rule.deadCellIsRebornWith(livingNeighborsOf(it)) }
 
     private fun deadCellsNeighborsToLiving() =
-        livingCells.flatMap { it.adjacent() } - livingCells
+        livingCells.flatMap(::neighborsOf) - livingCells
 
     private fun livingNeighborsOf(coordinate: Coordinate) = NumberOfLiveNeighbors(
-        coordinate.adjacent().intersect(livingCells).size
+        neighborsOf(coordinate).intersect(livingCells).size
     )
+
+    fun neighborsOf(coordinate: Coordinate) =
+        adjacentCells.map { coordinate + it }.toHashSet()
+
+    private val adjacentCells by lazy {
+        hashSetOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
+    }
 }
-
-typealias Coordinate = Pair<Int, Int>
-
-@SuppressWarnings("LongMethod")
-fun Coordinate.adjacent() = hashSetOf(
-    first - 1 to second - 1,
-    first - 1 to second,
-    first - 1 to second + 1,
-    first to second - 1,
-    first to second + 1,
-    first + 1 to second - 1,
-    first + 1 to second,
-    first + 1 to second + 1,
-)
