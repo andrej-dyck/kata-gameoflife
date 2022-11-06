@@ -61,7 +61,7 @@ class InfiniteBoardTest {
             )
             assertThat(
                 board.evolve(
-                    ClassicRule(survivalPredicate = { true }, birthPredicate = { false })
+                    ClassicRule(survivesWith = { true }, bornWith = { false })
                 )
             ).isEqualTo(
                 board
@@ -75,7 +75,7 @@ class InfiniteBoardTest {
             )
             assertThat(
                 board.evolve(
-                    ClassicRule(survivalPredicate = { false }, birthPredicate = { false })
+                    ClassicRule(survivesWith = { false }, bornWith = { false })
                 )
             ).isEqualTo(
                 Infinite2DBoard()
@@ -89,7 +89,7 @@ class InfiniteBoardTest {
             )
             assertThat(
                 board.evolve(
-                    ClassicRule(survivalPredicate = { false }, birthPredicate = { true })
+                    ClassicRule(survivesWith = { false }, bornWith = { true })
                 )
             ).isEqualTo(
                 boardFromString(

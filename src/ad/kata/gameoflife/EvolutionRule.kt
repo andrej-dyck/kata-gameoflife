@@ -1,42 +1,29 @@
 package ad.kata.gameoflife
 
 interface EvolutionRule {
-    fun applyTo(cell: Cell, liveNeighbors: NumberOfLiveNeighbors): Cell
+    fun appliedTo(cell: Cell, neighbors: LiveNeighbors): Cell
 }
 
-fun EvolutionRule.liveCellSurvivesWith(liveNeighbors: NumberOfLiveNeighbors) =
-    applyTo(LiveCell, liveNeighbors) is LiveCell
-
-fun EvolutionRule.deadCellIsRebornWith(liveNeighbors: NumberOfLiveNeighbors) =
-    applyTo(DeadCell, liveNeighbors) is LiveCell
-
-@JvmInline
-value class NumberOfLiveNeighbors(val amount: Int) {
+@JvmInline value class LiveNeighbors(val count: Int) {
     init {
-        require(amount >= 0)
+        require(count >= 0)
     }
 }
 
-@SuppressWarnings("ExpressionBodySyntax", "MagicNumber")
+@SuppressWarnings("MagicNumber")
 object ConwaysOriginalRule : EvolutionRule by ClassicRule(
-    survivalPredicate = { liveNeighbors -> liveNeighbors.amount in 2..3 },
-    birthPredicate = { liveNeighbors -> liveNeighbors.amount == 3 }
+    survivesWith = { n -> n.count in 2..3 },
+    bornWith = { n -> n.count == 3 }
 )
 
 class ClassicRule(
-    private val survivalPredicate: (NumberOfLiveNeighbors) -> Boolean,
-    private val birthPredicate: (NumberOfLiveNeighbors) -> Boolean
+    private val survivesWith: (neighbors: LiveNeighbors) -> Boolean,
+    private val bornWith: (neighbors: LiveNeighbors) -> Boolean
 ) : EvolutionRule {
 
-    override fun applyTo(cell: Cell, liveNeighbors: NumberOfLiveNeighbors) = when {
-        cell.diesWith(liveNeighbors) -> DeadCell
-        cell.isBornWith(liveNeighbors) -> LiveCell
-        else -> cell
+    override fun appliedTo(cell: Cell, neighbors: LiveNeighbors) = when {
+        cell.isAlive() && survivesWith(neighbors) -> LiveCell
+        cell.isDead() && bornWith(neighbors) -> LiveCell
+        else -> DeadCell
     }
-
-    private fun Cell.diesWith(liveNeighbors: NumberOfLiveNeighbors) =
-        isAlive() && !survivalPredicate(liveNeighbors)
-
-    private fun Cell.isBornWith(liveNeighbors: NumberOfLiveNeighbors) =
-        isDead() && birthPredicate(liveNeighbors)
 }

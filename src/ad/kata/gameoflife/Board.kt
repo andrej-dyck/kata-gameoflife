@@ -4,38 +4,51 @@ interface Board {
     fun evolve(rule: EvolutionRule): Board
 }
 
-data class Coordinate(val x: Int, val y: Int) {
-    operator fun plus(xy: Pair<Int, Int>) = Coordinate(x + xy.first, y + xy.second)
-}
-
 data class Infinite2DBoard(
-    private val livingCells: HashSet<Coordinate>
+    private val livingCells: Set<Coordinate>
 ) : Board {
 
-    constructor(vararg livingCells: Coordinate) : this(livingCells.toHashSet())
     constructor(livingCells: List<Coordinate>) : this(livingCells.toHashSet())
+    constructor(vararg livingCells: Coordinate) : this(livingCells.toHashSet())
 
-    override fun evolve(rule: EvolutionRule) = Infinite2DBoard(
-        survivingCells(rule) + rebornCells(rule)
+    override fun evolve(rule: EvolutionRule) = copy(
+        livingCells = survivingCells(rule) + bornCells(rule)
     )
 
     private fun survivingCells(rule: EvolutionRule) =
-        livingCells.filter { rule.liveCellSurvivesWith(livingNeighborsOf(it)) }
+        livingCells.filter {
+            LiveCell.survives(rule, liveNeighborsOf(it))
+        }.toHashSet()
 
-    private fun rebornCells(rule: EvolutionRule) =
-        deadCellsNeighborsToLiving().filter { rule.deadCellIsRebornWith(livingNeighborsOf(it)) }
+    private fun bornCells(rule: EvolutionRule) =
+        adjacentDeadCells().filter {
+            DeadCell.isBorn(rule, liveNeighborsOf(it))
+        }.toHashSet()
 
-    private fun deadCellsNeighborsToLiving() =
-        livingCells.flatMap(::neighborsOf) - livingCells
+    private fun adjacentDeadCells() =
+        livingCells.flatMap(::neighborsOf).toHashSet() - livingCells
 
-    private fun livingNeighborsOf(coordinate: Coordinate) = NumberOfLiveNeighbors(
-        neighborsOf(coordinate).intersect(livingCells).size
+    private fun liveNeighborsOf(coordinate: Coordinate) = LiveNeighbors(
+        neighborsOf(coordinate).count(livingCells::contains)
     )
 
     fun neighborsOf(coordinate: Coordinate) =
-        adjacentCells.map { coordinate + it }.toHashSet()
+        adjacentCells.map(coordinate::shift)
 
-    private val adjacentCells by lazy {
-        hashSetOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
+    companion object {
+        private val adjacentCells by lazy {
+            hashSetOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
+        }
     }
 }
+
+data class Coordinate(val x: Int, val y: Int) {
+    fun shift(xy: Pair<Int, Int>) = Coordinate(x + xy.first, y + xy.second)
+}
+
+private fun LiveCell.survives(rule: EvolutionRule, neighbors: LiveNeighbors) =
+    rule.appliedTo(this, neighbors).isAlive()
+
+private fun DeadCell.isBorn(rule: EvolutionRule, neighbors: LiveNeighbors) =
+    rule.appliedTo(this, neighbors).isAlive()
+
